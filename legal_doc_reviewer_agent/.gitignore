@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+.credits.json
+.venv/
+venv/
+inbox/_processed/
+inbox/_failed/
+outbox/*.review.json
+outbox/*.review.md
+.pytest_cache/

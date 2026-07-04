@@ -1,0 +1,42 @@
+MASTER SERVICES AGREEMENT
+
+This Master Services Agreement ("Agreement") is entered into as of the Effective
+Date by and between Acme Analytics Inc., a Delaware corporation ("Provider"), and
+the counterparty identified in the applicable Order Form ("Client").
+
+1. SERVICES. Provider shall provide the data analytics services described in each
+Order Form. Provider may modify the scope of Services at its sole discretion upon
+notice to Client.
+
+2. PAYMENT TERMS. Client shall pay all fees within Net 90 days of the invoice
+date. All fees are non-refundable. Late payments accrue a late fee of 5% per
+month. Provider may increase fees at any time without cause.
+
+3. TERM AND TERMINATION. This Agreement will automatically renew for successive
+twelve (12) month terms unless either party provides notice. Provider may
+terminate this Agreement for any reason at any time without cause. Client may
+terminate only for material breach that remains uncured for sixty (60) days.
+
+4. CONFIDENTIALITY. Each party agrees to keep the other party's Confidential
+Information confidential in perpetuity and not to disclose it to any third party.
+
+5. INTELLECTUAL PROPERTY. Client hereby assigns all intellectual property rights,
+including all work product created under this Agreement, to Provider. Provider
+grants Client a perpetual, irrevocable license to use the deliverables.
+
+6. INDEMNIFICATION. Client shall indemnify, defend and hold harmless Provider for
+any and all claims, losses, damages, and expenses arising out of or related to
+this Agreement, without limitation.
+
+7. LIABILITY. Client acknowledges that Provider shall have unlimited liability
+waived, and Client assumes all risk. In no event shall Provider's aggregate
+liability be limited.
+
+8. NON-COMPETE. During the term and for two (2) years thereafter, Client shall
+not compete with Provider or engage any competing analytics provider.
+
+9. GOVERNING LAW. This Agreement shall be governed by the laws of the State of
+Delaware, without regard to its conflict of laws principles.
+
+10. ENTIRE AGREEMENT. This Agreement constitutes the entire agreement between the
+parties and supersedes all prior understandings.
