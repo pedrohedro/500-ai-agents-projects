@@ -229,6 +229,67 @@ class OpenAILLM(LLMProvider):
         )
 
 
+class OpenRouterLLM(LLMProvider):
+    """Open-source models via OpenRouter's OpenAI-compatible API.
+
+    OpenRouter exposes 200+ models (including top open-weight ones like Llama 4,
+    DeepSeek V4/R2, Qwen 3 and GLM) behind the OpenAI SDK — we just point the SDK
+    at OpenRouter's ``base_url`` and use ``OPENROUTER_API_KEY``. This is the
+    recommended production provider: same quality tier as GPT-4-class models at a
+    fraction of the cost, which is what makes the credit margins viable.
+    """
+
+    name = "openrouter"
+
+    def __init__(self, settings: Optional[Settings] = None) -> None:
+        self.settings = settings or get_settings()
+        if not self.settings.openrouter_api_key:
+            raise RuntimeError(
+                "OPENROUTER_API_KEY is not set. Get a key at https://openrouter.ai/keys "
+                "or use LLM_PROVIDER=mock for offline runs."
+            )
+        try:
+            from openai import OpenAI  # type: ignore
+        except Exception as exc:  # pragma: no cover - depends on optional dep
+            raise RuntimeError(
+                "The 'openai' package is not installed (used as the OpenRouter "
+                "client). Install it or use LLM_PROVIDER=mock."
+            ) from exc
+        self._client = OpenAI(
+            api_key=self.settings.openrouter_api_key,
+            base_url=self.settings.openrouter_base_url,
+        )
+
+    def complete(self, prompt: str, *, system: Optional[str] = None) -> LLMResponse:  # pragma: no cover - network
+        messages = []
+        if system:
+            messages.append({"role": "system", "content": system})
+        messages.append({"role": "user", "content": prompt})
+        resp = self._client.chat.completions.create(
+            model=self.settings.openrouter_model,
+            temperature=self.settings.temperature,
+            messages=messages,
+            # Optional attribution headers recommended by OpenRouter.
+            extra_headers={
+                "HTTP-Referer": "https://github.com/500-ai-agents-projects",
+                "X-Title": "Marketing Content Agent",
+            },
+        )
+        text = resp.choices[0].message.content or ""
+        usage = getattr(resp, "usage", None)
+        if usage is not None:
+            return LLMResponse(
+                text=text,
+                prompt_tokens=getattr(usage, "prompt_tokens", estimate_tokens(prompt)),
+                completion_tokens=getattr(usage, "completion_tokens", estimate_tokens(text)),
+            )
+        return LLMResponse(
+            text=text,
+            prompt_tokens=estimate_tokens((system or "") + prompt),
+            completion_tokens=estimate_tokens(text),
+        )
+
+
 def get_llm(settings: Optional[Settings] = None) -> LLMProvider:
     """Factory that returns the configured provider.
 
@@ -237,6 +298,8 @@ def get_llm(settings: Optional[Settings] = None) -> LLMProvider:
     """
     settings = settings or get_settings()
     provider = settings.llm_provider
+    if provider == "openrouter":
+        return OpenRouterLLM(settings)
     if provider == "openai":
         return OpenAILLM(settings)
     if provider == "mock":
