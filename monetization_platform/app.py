@@ -5,11 +5,24 @@ from __future__ import annotations
 import os
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from .config import get_settings
 from .database import init_db
 from .routes import auth, billing, gateway, pages
+
+
+def _cors_origins() -> list[str]:
+    """Allowed origins for the static front-end (e.g. GitHub Pages).
+
+    Set ``CORS_ORIGINS`` to a comma-separated list of URLs
+    (e.g. ``https://user.github.io``). Defaults to ``*`` for easy setup.
+    """
+    raw = os.getenv("CORS_ORIGINS", "*").strip()
+    if not raw or raw == "*":
+        return ["*"]
+    return [o.strip() for o in raw.split(",") if o.strip()]
 
 _STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 
@@ -29,6 +42,14 @@ def create_app() -> FastAPI:
             "review, support chatbot, and HR resume screening. Buy credits, call "
             "the agents, pay per use."
         ),
+    )
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=_cors_origins(),
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"],
     )
 
     @app.get("/health", tags=["meta"])
