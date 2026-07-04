@@ -49,7 +49,10 @@ class Config:
     """Runtime configuration resolved from environment variables."""
 
     # --- Provider selection ---------------------------------------------
-    # ``mock`` runs fully offline with deterministic embeddings + answers.
+    # ``mock``       -> fully offline with deterministic embeddings + answers.
+    # ``openrouter`` -> open-source chat model (Llama 4 / DeepSeek / Qwen) with
+    #                   the local hashed embedder (no embeddings API needed).
+    # ``openai``     -> OpenAI chat + embeddings.
     llm_provider: str = field(default_factory=lambda: os.getenv("LLM_PROVIDER", "mock").lower())
 
     # --- OpenAI settings (only used when llm_provider == "openai") ------
@@ -58,6 +61,19 @@ class Config:
     openai_embedding_model: str = field(
         default_factory=lambda: os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small")
     )
+
+    # --- OpenRouter settings (open-source models) -----------------------
+    # DeepSeek V4 Flash is fast + very cheap, ideal for high-volume 24/7 support.
+    openrouter_api_key: str | None = field(default_factory=lambda: os.getenv("OPENROUTER_API_KEY"))
+    openrouter_model: str = field(
+        default_factory=lambda: os.getenv("OPENROUTER_MODEL", "deepseek/deepseek-v4-flash")
+    )
+    openrouter_base_url: str = field(
+        default_factory=lambda: os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+    )
+    # Embeddings for the ``openrouter`` provider: "local" (offline hashed, default)
+    # or "openai" (requires OPENAI_API_KEY). OpenRouter itself is chat-focused.
+    embedding_backend: str = field(default_factory=lambda: os.getenv("EMBEDDING_BACKEND", "local").lower())
 
     # --- Retrieval / RAG tuning -----------------------------------------
     knowledge_base_dir: Path = field(

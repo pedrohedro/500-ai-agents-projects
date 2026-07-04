@@ -196,11 +196,55 @@ class OpenAILLM(LLM):
         return resp.choices[0].message.content or ""
 
 
+class OpenRouterLLM(LLM):
+    """Open-source chat models via OpenRouter's OpenAI-compatible API.
+
+    OpenRouter serves top open-weight models (DeepSeek V4/R2, Llama 4, Qwen 3,
+    GLM) through the OpenAI SDK — we just point the SDK at OpenRouter's
+    ``base_url``. This is the recommended production LLM for 24/7 support: cheap,
+    fast, and quality on par with GPT-4-class models. Embeddings are handled
+    separately (see :func:`get_embedder`) since OpenRouter is chat-focused.
+    """
+
+    def __init__(self, api_key: str, model: str, base_url: str) -> None:
+        from openai import OpenAI  # lazy import
+
+        self._client = OpenAI(api_key=api_key, base_url=base_url)
+        self._model = model
+
+    def generate(self, system: str, user: str) -> str:
+        resp = self._client.chat.completions.create(
+            model=self._model,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            temperature=0.1,
+            extra_headers={
+                "HTTP-Referer": "https://github.com/500-ai-agents-projects",
+                "X-Title": "Support Chatbot Agent",
+            },
+        )
+        return resp.choices[0].message.content or ""
+
+
 # ---------------------------------------------------------------------------
 # Factories
 # ---------------------------------------------------------------------------
 def get_embedder(config: Config) -> Embedder:
     if config.is_mock:
+        return MockEmbedder(dim=config.embedding_dim)
+    if config.llm_provider == "openrouter":
+        # OpenRouter is chat-focused; use local hashed embeddings by default so
+        # retrieval works with zero embedding-API cost. Opt into OpenAI
+        # embeddings by setting EMBEDDING_BACKEND=openai (+ OPENAI_API_KEY).
+        if config.embedding_backend == "openai":
+            if not config.openai_api_key:
+                raise RuntimeError(
+                    "EMBEDDING_BACKEND=openai requires OPENAI_API_KEY. "
+                    "Use EMBEDDING_BACKEND=local (default) for offline embeddings."
+                )
+            return OpenAIEmbedder(config.openai_api_key, config.openai_embedding_model)
         return MockEmbedder(dim=config.embedding_dim)
     if not config.openai_api_key:
         raise RuntimeError(
@@ -213,6 +257,15 @@ def get_embedder(config: Config) -> Embedder:
 def get_llm(config: Config) -> LLM:
     if config.is_mock:
         return MockLLM()
+    if config.llm_provider == "openrouter":
+        if not config.openrouter_api_key:
+            raise RuntimeError(
+                "OPENROUTER_API_KEY is required when LLM_PROVIDER=openrouter. "
+                "Get one at https://openrouter.ai/keys or set LLM_PROVIDER=mock."
+            )
+        return OpenRouterLLM(
+            config.openrouter_api_key, config.openrouter_model, config.openrouter_base_url
+        )
     if not config.openai_api_key:
         raise RuntimeError(
             "OPENAI_API_KEY is required when LLM_PROVIDER=openai. "
