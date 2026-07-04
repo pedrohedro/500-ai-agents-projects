@@ -142,7 +142,32 @@ curl -X POST localhost:8000/generate \
   -d '{"topic":"Autonomous agents","target_audience":"founders","credits":10}'
 ```
 
-### 5. Use the real OpenAI provider
+### 5. Use open-source models via OpenRouter (recommended for production)
+
+[OpenRouter](https://openrouter.ai) serves top open-weight models behind an
+OpenAI-compatible API, so you get GPT-4-class quality at a fraction of the cost —
+this is what makes the credit margins work.
+
+```bash
+export LLM_PROVIDER=openrouter
+export OPENROUTER_API_KEY=sk-or-...            # https://openrouter.ai/keys
+export OPENROUTER_MODEL=meta-llama/llama-4-maverick
+python marketing_content_agent/main.py --topic "Your topic"
+```
+
+Recommended open-source models for marketing copy:
+
+| Model | Best for | ~Cost /1k in-out |
+| --- | --- | --- |
+| `meta-llama/llama-4-maverick` *(default)* | general + multilingual (incl. PT-BR), creative | $0.0002 / $0.0006 |
+| `qwen/qwen-3-235b` | multilingual + creative | $0.0002 / $0.0006 |
+| `deepseek/deepseek-v4-flash` | cheapest, fast, 1M context | $0.00009 / $0.00018 |
+| `z-ai/glm-4.7` | strong instruction following | $0.0004 / $0.0016 |
+
+> Tip: append `:free` to a model id (e.g. `deepseek/deepseek-v4-flash:free`) to
+> use OpenRouter's free tier while prototyping.
+
+### 6. Use the OpenAI provider
 
 ```bash
 export LLM_PROVIDER=openai
@@ -227,9 +252,11 @@ See [`.env.example`](./.env.example) for every variable. Key ones:
 
 | Var | Purpose | Default |
 |-----|---------|---------|
-| `LLM_PROVIDER` | `mock` (offline) or `openai` | `mock` |
+| `LLM_PROVIDER` | `mock` (offline), `openrouter` (open-source) or `openai` | `mock` |
+| `OPENROUTER_API_KEY` | required for `openrouter` provider | — |
+| `OPENROUTER_MODEL` | open-source model + price row selector | `meta-llama/llama-4-maverick` |
 | `OPENAI_API_KEY` | required for `openai` provider | — |
-| `LLM_MODEL` | model + price row selector | `gpt-4o-mini` |
+| `LLM_MODEL` | model + price row selector (openai) | `gpt-4o-mini` |
 | `CREDITS_PER_GENERATION` | credits charged per run | `5` |
 | `CREDIT_PRICE_USD` | retail price per credit | `0.20` |
 | `STRIPE_API_KEY` | enables real checkout when set | — |
