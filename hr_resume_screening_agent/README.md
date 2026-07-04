@@ -128,6 +128,25 @@ python main.py --estimate                   # estimate cost, don't screen
 python main.py --credits 0.05               # enable billing; stops when broke
 ```
 
+### Using open-source models via OpenRouter (recommended)
+
+[OpenRouter](https://openrouter.ai) serves top open-weight models behind an
+OpenAI-compatible API — GPT-4-class quality at a fraction of the cost, which is
+what keeps the per-resume margin high.
+
+```bash
+export LLM_PROVIDER=openrouter
+export OPENROUTER_API_KEY=sk-or-...        # https://openrouter.ai/keys
+export OPENROUTER_MODEL=deepseek/deepseek-v4-flash
+python main.py
+```
+
+| Model | Best for | ~Cost /1k in-out |
+| --- | --- | --- |
+| `deepseek/deepseek-v4-flash` *(default)* | cheapest, fast, 1M context | $0.00009 / $0.00018 |
+| `qwen/qwen-3-235b` | multilingual resumes | $0.0002 / $0.0006 |
+| `meta-llama/llama-4-maverick` | best general/multilingual (incl. PT-BR) | $0.0002 / $0.0006 |
+
 ### Using OpenAI (optional)
 
 ```bash
@@ -136,8 +155,8 @@ export OPENAI_API_KEY=sk-...
 python main.py
 ```
 
-If OpenAI is unavailable, `get_llm` raises a clear error and you can fall back
-to `LLM_PROVIDER=mock`.
+If a real provider is unavailable, `get_llm` raises a clear error and you can
+fall back to `LLM_PROVIDER=mock`.
 
 ---
 

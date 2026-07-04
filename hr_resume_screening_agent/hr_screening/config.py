@@ -32,6 +32,11 @@ class Settings:
     openai_api_key: str | None = None
     openai_model: str = "gpt-4o-mini"
 
+    # OpenRouter (open-source models via an OpenAI-compatible endpoint).
+    openrouter_api_key: str | None = None
+    openrouter_model: str = "deepseek/deepseek-v4-flash"
+    openrouter_base_url: str = "https://openrouter.ai/api/v1"
+
     # Billing / pricing
     price_per_1k_tokens_usd: float = 0.01
     margin_multiplier: float = 3.0
@@ -49,6 +54,9 @@ class Settings:
             llm_provider=os.environ.get("LLM_PROVIDER", "mock").strip().lower(),
             openai_api_key=os.environ.get("OPENAI_API_KEY") or None,
             openai_model=os.environ.get("OPENAI_MODEL", "gpt-4o-mini"),
+            openrouter_api_key=os.environ.get("OPENROUTER_API_KEY") or None,
+            openrouter_model=os.environ.get("OPENROUTER_MODEL", "deepseek/deepseek-v4-flash"),
+            openrouter_base_url=os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"),
             price_per_1k_tokens_usd=_get_float("PRICE_PER_1K_TOKENS_USD", 0.01),
             margin_multiplier=_get_float("MARGIN_MULTIPLIER", 3.0),
             price_per_resume_usd=_get_float("PRICE_PER_RESUME_USD", 0.50),
