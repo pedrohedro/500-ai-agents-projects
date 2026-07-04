@@ -1,0 +1,15 @@
+Bob Martinez
+Backend Developer
+
+Summary:
+Software engineer with 6 years of experience delivering backend services and
+internal tooling.
+
+Experience:
+- Built REST APIs in Python (Django and Flask).
+- Worked extensively with SQL and PostgreSQL databases.
+- Packaged and shipped applications with Docker.
+- Deployed workloads to AWS (EC2, S3, Lambda).
+- Some exposure to Terraform for infrastructure as code.
+
+Skills: Python, Django, Flask, REST APIs, SQL, PostgreSQL, Docker, AWS, Terraform, Git.

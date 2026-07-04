@@ -1,0 +1,14 @@
+Carol Smith
+Software Engineer
+
+Summary:
+Engineer with 4 years of experience, primarily on data tooling and internal
+scripts.
+
+Experience:
+- Wrote Python scripts and data analysis notebooks using pandas and numpy.
+- Managed a SQL (MySQL) reporting database.
+- Used Docker locally for development environments.
+- Built ETL jobs with Airflow for a small data engineering team.
+
+Skills: Python, SQL, MySQL, pandas, numpy, data analysis, Docker, Airflow, ETL.

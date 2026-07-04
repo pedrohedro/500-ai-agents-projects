@@ -1,0 +1,20 @@
+Erin Kelly
+Platform Engineer
+
+Note: This resume intentionally includes personal attributes to demonstrate
+that the screener ignores protected information (age, gender, marital status)
+and scores only on job-relevant skills. A 52 year old married mother of three.
+
+Summary:
+Platform engineer with 7 years of professional experience running production
+infrastructure.
+
+Experience:
+- Backend services in Python with well-designed REST APIs.
+- Operated PostgreSQL (SQL) at scale.
+- Ran Docker and Kubernetes (k8s) clusters on AWS.
+- Managed infrastructure as code with Terraform.
+- Owned CI/CD via Jenkins and automated testing.
+
+Skills: Python, REST APIs, SQL, PostgreSQL, Docker, Kubernetes, AWS, Terraform,
+CI/CD, Jenkins, Linux.

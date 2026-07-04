@@ -1,0 +1,23 @@
+# Core pipeline runs in MOCK mode with the Python standard library ONLY.
+# Everything below is OPTIONAL and enables real providers / PDF / web / billing.
+# If any of these fail to install (offline, etc.) the product still runs in
+# mock mode: `LLM_PROVIDER=mock python main.py`.
+
+# --- LLM provider (optional; only needed for LLM_PROVIDER=openai) ---
+openai==1.54.4
+
+# --- PDF resume extraction (optional; graceful fallback to plain text) ---
+pypdf==5.1.0
+
+# --- Automation: FastAPI webhook (optional; batch mode needs none of these) ---
+fastapi==0.115.5
+uvicorn==0.32.1
+pydantic==2.10.3
+httpx==0.28.1
+
+# --- Billing: Stripe checkout (optional; disabled without STRIPE_API_KEY) ---
+stripe==11.3.0
+
+# --- Config + testing ---
+python-dotenv==1.0.1
+pytest==8.3.4

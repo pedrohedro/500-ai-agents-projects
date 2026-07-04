@@ -1,0 +1,17 @@
+Alice Nguyen
+Senior Backend Engineer
+
+Summary:
+Backend engineer with 8 years of professional experience building reliable,
+high-throughput services in Python. I have led small teams and mentored junior
+engineers.
+
+Experience:
+- Designed and built REST APIs serving millions of requests/day using Python and FastAPI.
+- Owned PostgreSQL schema design and query optimization (SQL).
+- Containerized services with Docker and deployed to Kubernetes on AWS.
+- Built CI/CD pipelines with GitHub Actions and comprehensive automated testing.
+- Provided technical leadership and mentoring for a team of 5.
+
+Skills: Python, FastAPI, REST APIs, PostgreSQL, SQL, Docker, Kubernetes, AWS,
+CI/CD, GitHub Actions, mentoring, leadership.

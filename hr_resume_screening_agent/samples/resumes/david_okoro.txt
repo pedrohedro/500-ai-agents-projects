@@ -1,0 +1,12 @@
+David Okoro
+Frontend Engineer
+
+Summary:
+Frontend-focused engineer with 3 years of experience building web interfaces.
+
+Experience:
+- Built responsive single-page applications with React and TypeScript.
+- Consumed REST APIs and GraphQL endpoints from the browser.
+- Collaborated using Git and Agile/Scrum processes.
+
+Skills: JavaScript, TypeScript, React, HTML, CSS, GraphQL, REST APIs, Git, Agile.
