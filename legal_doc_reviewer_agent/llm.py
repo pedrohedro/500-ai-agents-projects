@@ -278,6 +278,59 @@ class OpenAILLMProvider(LLMProvider):
         return {"content": content, "tokens": tokens}
 
 
+class OpenRouterLLMProvider(LLMProvider):
+    """Open-source models via OpenRouter's OpenAI-compatible API.
+
+    OpenRouter exposes top open-weight models (DeepSeek V4/R2, Llama 4, Qwen 3,
+    GLM) through the OpenAI SDK — we point the SDK at OpenRouter's ``base_url``.
+    We keep ``response_format=json_object`` because the pipeline parses the
+    completion as JSON; DeepSeek and other recommended models support it.
+    """
+
+    name = "openrouter"
+
+    def __init__(self, settings: Settings):
+        if not settings.openrouter_api_key:
+            raise RuntimeError(
+                "OPENROUTER_API_KEY is required for the OpenRouter provider. "
+                "Get one at https://openrouter.ai/keys or set LLM_PROVIDER=mock."
+            )
+        try:
+            from openai import OpenAI  # type: ignore
+        except Exception as exc:  # pragma: no cover - exercised only with dep
+            raise RuntimeError(
+                "The 'openai' package (used as the OpenRouter client) is not "
+                "installed. Install it or use LLM_PROVIDER=mock."
+            ) from exc
+        self._client = OpenAI(
+            api_key=settings.openrouter_api_key,
+            base_url=settings.openrouter_base_url,
+        )
+        self._model = settings.openrouter_model
+
+    def complete(self, system: str, user: str, task: str = "") -> Dict[str, Any]:  # pragma: no cover - needs network
+        resp = self._client.chat.completions.create(
+            model=self._model,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            response_format={"type": "json_object"},
+            temperature=0,
+            extra_headers={
+                "HTTP-Referer": "https://github.com/500-ai-agents-projects",
+                "X-Title": "Legal Document Reviewer",
+            },
+        )
+        content = resp.choices[0].message.content or "{}"
+        tokens = 0
+        if getattr(resp, "usage", None) is not None:
+            tokens = getattr(resp.usage, "total_tokens", 0) or 0
+        if not tokens:
+            tokens = estimate_tokens(system) + estimate_tokens(user) + estimate_tokens(content)
+        return {"content": content, "tokens": tokens}
+
+
 def get_provider(settings: Settings | None = None) -> LLMProvider:
     """Factory that returns the configured provider.
 
@@ -286,6 +339,8 @@ def get_provider(settings: Settings | None = None) -> LLMProvider:
     """
     settings = settings or get_settings()
     provider = (settings.llm_provider or "mock").lower()
+    if provider == "openrouter":
+        return OpenRouterLLMProvider(settings)
     if provider == "openai":
         return OpenAILLMProvider(settings)
     return MockLLMProvider()
