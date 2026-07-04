@@ -47,11 +47,20 @@ _load_dotenv()
 
 
 # Default price table: USD cost charged by the upstream LLM API per 1k tokens.
-# These mirror typical OpenAI list prices and are fully configurable.
+# Values mirror published list prices and are fully configurable. Open-source
+# models are served through OpenRouter (https://openrouter.ai) and are ~20-50x
+# cheaper than proprietary models, which is what makes the unit economics work.
 DEFAULT_PRICE_PER_1K: Dict[str, Dict[str, float]] = {
+    # Proprietary (OpenAI) references.
     "gpt-4o-mini": {"input": 0.00015, "output": 0.00060},
     "gpt-4o": {"input": 0.0025, "output": 0.010},
     "gpt-4.1-mini": {"input": 0.0004, "output": 0.0016},
+    # Open-source models via OpenRouter (per 1k tokens).
+    "meta-llama/llama-4-maverick": {"input": 0.00020, "output": 0.00060},
+    "deepseek/deepseek-v4-flash": {"input": 0.00009, "output": 0.00018},
+    "deepseek/deepseek-r2": {"input": 0.00030, "output": 0.00120},
+    "qwen/qwen-3-235b": {"input": 0.00020, "output": 0.00060},
+    "z-ai/glm-4.7": {"input": 0.00040, "output": 0.00160},
     "mock": {"input": 0.0, "output": 0.0},
 }
 
@@ -64,6 +73,16 @@ class Settings:
     openai_api_key: str = field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
     model: str = field(default_factory=lambda: os.getenv("LLM_MODEL", "gpt-4o-mini"))
     temperature: float = field(default_factory=lambda: float(os.getenv("LLM_TEMPERATURE", "0.7")))
+
+    # OpenRouter (open-source models via an OpenAI-compatible endpoint).
+    # Default model chosen for strong, multilingual, creative copy at low cost.
+    openrouter_api_key: str = field(default_factory=lambda: os.getenv("OPENROUTER_API_KEY", ""))
+    openrouter_model: str = field(
+        default_factory=lambda: os.getenv("OPENROUTER_MODEL", "meta-llama/llama-4-maverick")
+    )
+    openrouter_base_url: str = field(
+        default_factory=lambda: os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+    )
 
     # Billing
     starting_credits: int = field(default_factory=lambda: int(os.getenv("STARTING_CREDITS", "100")))
@@ -88,9 +107,17 @@ class Settings:
     def price_per_1k(self) -> Dict[str, Dict[str, float]]:
         return DEFAULT_PRICE_PER_1K
 
+    @property
+    def active_model(self) -> str:
+        """The model actually used for generation, given the provider."""
+        if self.llm_provider == "mock":
+            return "mock"
+        if self.llm_provider == "openrouter":
+            return self.openrouter_model
+        return self.model
+
     def model_price(self) -> Dict[str, float]:
-        key = "mock" if self.llm_provider == "mock" else self.model
-        return self.price_per_1k.get(key, self.price_per_1k["gpt-4o-mini"])
+        return self.price_per_1k.get(self.active_model, self.price_per_1k["gpt-4o-mini"])
 
 
 def get_settings() -> Settings:
