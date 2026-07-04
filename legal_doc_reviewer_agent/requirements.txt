@@ -1,0 +1,19 @@
+# Core runtime is standard-library only, so the product ALWAYS runs in mock mode
+# even if every optional dependency below fails to install.
+
+# --- Optional: PDF extraction (graceful fallback to plain text if missing) ---
+pypdf==4.3.1
+
+# --- Optional: OpenAI-backed provider (only needed for LLM_PROVIDER=openai) ---
+openai==1.51.2
+
+# --- Optional: FastAPI webhook (folder-watch/batch mode works without these) ---
+fastapi==0.115.2
+uvicorn==0.30.6
+pydantic==2.9.2
+
+# --- Optional: Stripe checkout (billing stub disabled without STRIPE_API_KEY) ---
+stripe==10.12.0
+
+# --- Testing ---
+pytest==8.3.3
