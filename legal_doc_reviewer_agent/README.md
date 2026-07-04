@@ -141,10 +141,29 @@ Drop `.txt`/`.pdf`/`.md` files into `inbox/`; results appear in `outbox/` as
 | `LLM_PROVIDER` | Behaviour | Requirements |
 | --- | --- | --- |
 | `mock` (default) | Deterministic offline analysis. | None |
+| `openrouter` **(recommended)** | Open-source models via OpenRouter's OpenAI-compatible API (strict JSON contract). | `OPENROUTER_API_KEY`, `openai` package |
 | `openai` | Calls OpenAI Chat Completions with a strict JSON contract. | `OPENAI_API_KEY`, `openai` package |
 
 Set variables in `.env` (see `.env.example`). Unknown providers fall back to
 mock so the product always runs.
+
+### Recommended open-source models (via OpenRouter)
+
+```bash
+export LLM_PROVIDER=openrouter
+export OPENROUTER_API_KEY=sk-or-...       # https://openrouter.ai/keys
+export OPENROUTER_MODEL=deepseek/deepseek-v4-flash
+python main.py samples/sample_contract.txt
+```
+
+| Model | Best for | ~Cost /1k in-out |
+| --- | --- | --- |
+| `deepseek/deepseek-v4-flash` *(default)* | cheapest, 1M context, strong JSON output | $0.00009 / $0.00018 |
+| `deepseek/deepseek-r2` | deepest reasoning for tricky risk analysis | $0.0003 / $0.0012 |
+| `qwen/qwen-3-235b` | multilingual contracts | $0.0002 / $0.0006 |
+
+Open-source models are ~10-50x cheaper than GPT-4-class models, which is what
+makes the per-document margin (documented below) so high.
 
 ---
 

@@ -57,10 +57,21 @@ STANDARD_CLAUSES: List[str] = [
 class Settings:
     """Runtime settings resolved from the environment."""
 
-    # LLM provider: "mock" (default, no keys) or "openai".
+    # LLM provider: "mock" (default, no keys), "openrouter" (open-source) or "openai".
     llm_provider: str = field(default_factory=lambda: os.getenv("LLM_PROVIDER", "mock").strip().lower())
     openai_api_key: str = field(default_factory=lambda: os.getenv("OPENAI_API_KEY", ""))
     openai_model: str = field(default_factory=lambda: os.getenv("OPENAI_MODEL", "gpt-4o-mini"))
+
+    # OpenRouter (open-source models via an OpenAI-compatible endpoint).
+    # DeepSeek V4 Flash: strong structured-output/JSON support, 1M-token context
+    # (handles very long contracts) and the best cost/accuracy for extraction.
+    openrouter_api_key: str = field(default_factory=lambda: os.getenv("OPENROUTER_API_KEY", ""))
+    openrouter_model: str = field(
+        default_factory=lambda: os.getenv("OPENROUTER_MODEL", "deepseek/deepseek-v4-flash")
+    )
+    openrouter_base_url: str = field(
+        default_factory=lambda: os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+    )
 
     # Billing / pricing.
     price_per_1k_tokens: float = field(default_factory=lambda: _get_float("PRICE_PER_1K_TOKENS", 0.03))
