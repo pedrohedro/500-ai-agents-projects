@@ -206,3 +206,13 @@ Covers: signup+auth, API-key hashing, wallet credit/debit + ledger reconstructio
 Stripe checkout (mock), webhook + simulate-payment crediting, all four metered
 agent endpoints, 402 when out of credits, and landing-page render — all with no
 real keys.
+
+## Deploy & Go-to-Market
+
+- **[`DEPLOY.md`](./DEPLOY.md)** — passo a passo para colocar no ar e faturando
+  (Railway / Render / Docker), configurar o webhook da Stripe e o teste de fumaça.
+- **[`GO_TO_MARKET/`](./GO_TO_MARKET/)** — kit de lançamento para conseguir os
+  primeiros clientes: [preços e margem](./GO_TO_MARKET/pricing-and-margins.md),
+  [página de vendas](./GO_TO_MARKET/sales-page.md),
+  [posts para redes sociais](./GO_TO_MARKET/social-posts.md) e
+  [e-mails de prospecção](./GO_TO_MARKET/cold-emails.md).
