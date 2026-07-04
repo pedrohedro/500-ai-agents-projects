@@ -1,0 +1,32 @@
+# Render.com blueprint for the monetization platform.
+# In the Render dashboard: New > Blueprint > point at this repo. Then set the
+# secret env vars (Stripe + OpenRouter) marked `sync: false` below.
+services:
+  - type: web
+    name: agent-api-cloud
+    runtime: docker
+    dockerfilePath: ./monetization_platform/Dockerfile
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: APP_NAME
+        value: Agent API Cloud
+      - key: LLM_PROVIDER
+        value: openrouter
+      - key: BASE_URL
+        sync: false          # e.g. https://agent-api-cloud.onrender.com
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: STRIPE_API_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: agent-api-db
+          property: connectionString
+
+databases:
+  - name: agent-api-db
+    plan: basic-256mb
