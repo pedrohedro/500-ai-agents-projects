@@ -124,9 +124,29 @@ Example response:
 
 ---
 
-## Switching to production (OpenAI + Stripe)
+## Switching to production
 
-Copy `.env.example` to `.env` and set:
+### Option A — Open-source models via OpenRouter (recommended)
+
+[OpenRouter](https://openrouter.ai) serves top open-weight chat models behind an
+OpenAI-compatible API. For high-volume 24/7 support, cheap + fast wins, so this
+is the recommended path. Embeddings stay **local** (offline hashed) by default,
+so retrieval costs nothing.
+
+```bash
+LLM_PROVIDER=openrouter
+OPENROUTER_API_KEY=sk-or-...            # https://openrouter.ai/keys
+OPENROUTER_MODEL=deepseek/deepseek-v4-flash
+EMBEDDING_BACKEND=local                 # or "openai" for hosted embeddings
+```
+
+| Model | Best for | ~Cost /1k in-out |
+| --- | --- | --- |
+| `deepseek/deepseek-v4-flash` *(default)* | cheapest, fast, high throughput | $0.00009 / $0.00018 |
+| `meta-llama/llama-4-maverick` | best multilingual (incl. PT-BR) | $0.0002 / $0.0006 |
+| `qwen/qwen-3-235b` | strong multilingual | $0.0002 / $0.0006 |
+
+### Option B — OpenAI + Stripe
 
 ```bash
 LLM_PROVIDER=openai
@@ -137,7 +157,7 @@ STRIPE_PRICE_ID=price_...
 ```
 
 Nothing else changes — the provider interfaces in `llm.py` swap the mock
-implementations for the OpenAI-backed ones automatically.
+implementations for the OpenRouter/OpenAI-backed ones automatically.
 
 ---
 
