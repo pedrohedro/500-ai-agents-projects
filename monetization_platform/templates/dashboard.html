@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · {{ app_name }}{% endblock %}
+{% block content %}
+<section class="section narrow">
+  <h2>Your dashboard</h2>
+  <p class="section-sub">Paste your API key to view your balance, buy credits, and see recent usage.</p>
+
+  <div class="card form">
+    <label>API key
+      <input type="password" id="api-key" placeholder="sk_live_...">
+    </label>
+    <div class="cta-row">
+      <button class="btn btn-primary" id="load-btn">Load account</button>
+      <button class="btn btn-ghost" id="forget-btn">Forget key</button>
+    </div>
+  </div>
+
+  <div id="account" class="hidden">
+    <div class="balance-card card">
+      <div>
+        <span class="muted">Signed in as</span>
+        <div class="email" id="acct-email"></div>
+      </div>
+      <div class="balance">
+        <span class="muted">Credit balance</span>
+        <div class="big" id="acct-credits">–</div>
+      </div>
+    </div>
+
+    <h3>Buy more credits</h3>
+    <div class="grid pricing small">
+      {% for p in packs %}
+      <div class="card price-card">
+        <h3>{{ p.name }}</h3>
+        <div class="price">${{ '%.0f'|format(p.price_usd) }}</div>
+        <div class="credits">{{ '{:,}'.format(p.credits) }} credits</div>
+        <button class="btn btn-primary buy-btn" data-pack="{{ p.key }}">Buy</button>
+        {% if not stripe_enabled %}
+        <button class="btn btn-ghost sim-btn" data-pack="{{ p.key }}">Simulate payment</button>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <h3>Recent usage</h3>
+    <table class="ledger">
+      <thead><tr><th>When</th><th>Type</th><th>Agent</th><th>Δ credits</th><th>Balance</th><th>Tokens</th></tr></thead>
+      <tbody id="ledger-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+const keyInput = document.getElementById('api-key');
+keyInput.value = localStorage.getItem('api_key') || '';
+
+function authHeaders() { return {'Authorization': 'Bearer ' + keyInput.value, 'Content-Type': 'application/json'}; }
+
+async function loadAccount() {
+  if (!keyInput.value) { alert('Enter your API key.'); return; }
+  localStorage.setItem('api_key', keyInput.value);
+  const res = await fetch('/billing/balance', {headers: authHeaders()});
+  if (!res.ok) { alert('Could not load account (check your API key).'); return; }
+  const data = await res.json();
+  document.getElementById('account').classList.remove('hidden');
+  document.getElementById('acct-email').textContent = data.email;
+  document.getElementById('acct-credits').textContent = data.credits.toLocaleString();
+  const body = document.getElementById('ledger-body');
+  body.innerHTML = '';
+  data.recent_events.forEach((e) => {
+    const tr = document.createElement('tr');
+    const when = e.created_at ? new Date(e.created_at).toLocaleString() : '';
+    tr.innerHTML = `<td>${when}</td><td>${e.kind}</td><td>${e.agent || '—'}</td>` +
+      `<td class="${e.credits_delta < 0 ? 'neg' : 'pos'}">${e.credits_delta}</td>` +
+      `<td>${e.balance_after}</td><td>${e.tokens}</td>`;
+    body.appendChild(tr);
+  });
+}
+
+document.getElementById('load-btn').addEventListener('click', loadAccount);
+document.getElementById('forget-btn').addEventListener('click', () => {
+  localStorage.removeItem('api_key'); keyInput.value = '';
+  document.getElementById('account').classList.add('hidden');
+});
+
+document.querySelectorAll('.buy-btn').forEach((b) => b.addEventListener('click', async () => {
+  const res = await fetch('/billing/checkout', {method: 'POST', headers: authHeaders(), body: JSON.stringify({pack_key: b.dataset.pack})});
+  const data = await res.json();
+  if (res.ok && data.checkout_url) window.location.href = data.checkout_url;
+  else alert('Checkout error: ' + (data.detail || res.status));
+}));
+
+document.querySelectorAll('.sim-btn').forEach((b) => b.addEventListener('click', async () => {
+  const res = await fetch('/billing/simulate-payment', {method: 'POST', headers: authHeaders(), body: JSON.stringify({pack_key: b.dataset.pack})});
+  const data = await res.json();
+  if (res.ok) { alert('Payment simulated! Added credits. New balance: ' + data.balance); loadAccount(); }
+  else alert('Error: ' + (data.detail || res.status));
+}));
+
+if (keyInput.value) loadAccount();
+</script>
+{% endblock %}
