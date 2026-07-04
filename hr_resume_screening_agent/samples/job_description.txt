@@ -1,0 +1,21 @@
+Title: Senior Backend Engineer (Python)
+
+About the role:
+We are hiring a Senior Backend Engineer to design and operate our data platform
+and customer-facing APIs. You will work across services and own reliability.
+
+Requirements (must have):
+- 5+ years of professional software engineering experience
+- Strong Python
+- Experience designing and building REST APIs
+- SQL and relational database design (PostgreSQL)
+- Docker and containerized deployments
+- AWS cloud services
+- CI/CD pipelines and automated testing
+
+Nice to have (preferred):
+- Kubernetes in production
+- Terraform / infrastructure as code
+- FastAPI
+- Experience with data engineering (ETL, Airflow, Spark)
+- Leadership or mentoring experience
