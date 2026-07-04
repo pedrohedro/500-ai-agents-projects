@@ -1,0 +1,26 @@
+Security and Privacy
+
+Data encryption
+All data is encrypted in transit using TLS 1.2 or higher, and encrypted at rest
+using AES-256. Encryption keys are managed by our cloud provider's key
+management service and rotated regularly.
+
+Two-factor authentication
+We strongly recommend enabling two-factor authentication (2FA) for all accounts.
+You can enable 2FA from Settings -> Security. We support authenticator apps such
+as Google Authenticator and Authy, as well as hardware security keys.
+
+Data residency
+Enterprise customers on the Scale plan can choose the region where their data is
+stored, including the United States and the European Union, to meet data
+residency requirements.
+
+Compliance
+Acme Cloud is SOC 2 Type II compliant and GDPR compliant. A copy of our SOC 2
+report is available to Growth and Scale customers under a non-disclosure
+agreement. Contact your account manager to request it.
+
+Deleting your data
+You can permanently delete your account and associated data from Settings ->
+Account -> Delete account. Deletion is irreversible and completes within 30
+days across all backups.

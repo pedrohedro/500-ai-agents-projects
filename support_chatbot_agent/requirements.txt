@@ -1,0 +1,19 @@
+# Core runtime dependencies (pinned).
+# The product runs end-to-end in MOCK mode using only numpy + stdlib.
+numpy==2.1.3
+
+# Web service (webhook endpoint).
+fastapi==0.115.5
+uvicorn==0.32.1
+pydantic==2.10.3
+
+# Config loading (optional at runtime; imported defensively).
+python-dotenv==1.0.1
+
+# Real providers (only needed when LLM_PROVIDER=openai / Stripe enabled).
+openai==1.57.4
+stripe==11.3.0
+
+# Testing.
+pytest==8.3.4
+httpx==0.28.1
