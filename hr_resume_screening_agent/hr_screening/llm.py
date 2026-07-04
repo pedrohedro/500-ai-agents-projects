@@ -180,13 +180,46 @@ class OpenAILLM(LLMProvider):
         )
 
 
+class OpenRouterLLM(OpenAILLM):
+    """Open-source models via OpenRouter's OpenAI-compatible API.
+
+    OpenRouter serves top open-weight models (DeepSeek V4/R2, Llama 4, Qwen 3,
+    GLM) through the OpenAI SDK — we point the SDK at OpenRouter's ``base_url``.
+    Recommended for production: GPT-4-class quality at a fraction of the cost,
+    which is what makes the per-resume margin viable.
+    """
+
+    name = "openrouter"
+
+    def __init__(self, api_key: str, model: str, base_url: str) -> None:
+        try:
+            from openai import OpenAI  # type: ignore
+        except Exception as exc:  # pragma: no cover - only when lib missing
+            raise RuntimeError(
+                "openai package (used as the OpenRouter client) is not installed. "
+                "Install it or use LLM_PROVIDER=mock."
+            ) from exc
+        self._client = OpenAI(api_key=api_key, base_url=base_url)
+        self.model = model
+
+
 def get_llm(provider: str | None = None, *, api_key: str | None = None, model: str | None = None) -> LLMProvider:
     """Factory returning an :class:`LLMProvider`.
 
-    Falls back to :class:`MockLLM` whenever OpenAI cannot be initialized so the
-    product keeps working offline.
+    Falls back to :class:`MockLLM` whenever a real provider cannot be initialized
+    so the product keeps working offline.
     """
     provider = (provider or os.environ.get("LLM_PROVIDER", "mock")).strip().lower()
+    if provider == "openrouter":
+        key = api_key or os.environ.get("OPENROUTER_API_KEY")
+        if not key:
+            raise RuntimeError(
+                "LLM_PROVIDER=openrouter but OPENROUTER_API_KEY is not set. "
+                "Get one at https://openrouter.ai/keys or use LLM_PROVIDER=mock."
+            )
+        mdl = model or os.environ.get("OPENROUTER_MODEL", "deepseek/deepseek-v4-flash")
+        base_url = os.environ.get("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+        return OpenRouterLLM(api_key=key, model=mdl, base_url=base_url)
     if provider == "openai":
         key = api_key or os.environ.get("OPENAI_API_KEY")
         if not key:
