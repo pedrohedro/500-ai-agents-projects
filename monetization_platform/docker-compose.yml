@@ -1,0 +1,44 @@
+# docker-compose for the monetization platform.
+# Run from the repository root:  docker compose -f monetization_platform/docker-compose.yml up --build
+#
+# By default the app uses the bundled SQLite DB. Uncomment the `postgres` service
+# and the DATABASE_URL below to run against Postgres instead.
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: monetization_platform/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      APP_NAME: "Agent API Cloud"
+      BASE_URL: "http://localhost:8000"
+      LLM_PROVIDER: "${LLM_PROVIDER:-mock}"
+      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY:-}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      STRIPE_API_KEY: "${STRIPE_API_KEY:-}"
+      STRIPE_WEBHOOK_SECRET: "${STRIPE_WEBHOOK_SECRET:-}"
+      # Default: local SQLite persisted in the named volume.
+      DATABASE_URL: "${DATABASE_URL:-sqlite:////data/monetization.db}"
+      # To use Postgres instead, set (and enable the service below):
+      # DATABASE_URL: "postgresql+psycopg://saas:saas@postgres:5432/saas"
+    volumes:
+      - app_data:/data
+    # depends_on:
+    #   - postgres
+
+  # postgres:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_USER: saas
+  #     POSTGRES_PASSWORD: saas
+  #     POSTGRES_DB: saas
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - pg_data:/var/lib/postgresql/data
+
+volumes:
+  app_data:
+  # pg_data:

@@ -1,0 +1,27 @@
+# Root requirements for the Vercel deployment (serverless).
+# Aggregates the monetization platform + the runtime deps of the 4 agent packages.
+# NOTE: uvicorn/pytest are intentionally omitted (Vercel provides the server).
+
+# --- Web framework / API ---
+fastapi==0.111.0
+pydantic==2.7.4
+python-multipart==0.0.9
+jinja2==3.1.4
+
+# --- Database (Postgres driver required on Vercel; SQLite does not persist) ---
+SQLAlchemy==2.0.30
+psycopg2-binary==2.9.9
+
+# --- Billing ---
+stripe==9.12.0
+
+# --- LLM provider (OpenAI SDK, also used for OpenRouter) ---
+openai==1.54.4
+
+# --- Agent-specific runtime deps ---
+numpy==2.1.3
+pypdf==5.1.0
+
+# --- Config / HTTP ---
+python-dotenv==1.0.1
+httpx==0.27.0

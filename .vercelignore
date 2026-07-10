@@ -1,0 +1,22 @@
+# Keep the serverless bundle small and under Vercel's size limit.
+# Do NOT ignore runtime data the app needs: templates/, static/, knowledge_base/.
+
+**/.venv
+**/venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/tests
+**/*.db
+**/*.sqlite3
+**/.credits.json
+
+# Repo docs / images not needed at runtime
+images
+CONTRIBUTION.md
+
+# Agent demo inputs not used by the platform at runtime
+legal_doc_reviewer_agent/inbox
+legal_doc_reviewer_agent/outbox
+legal_doc_reviewer_agent/samples
+hr_resume_screening_agent/samples

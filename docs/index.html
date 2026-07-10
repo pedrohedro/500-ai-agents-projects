@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent API Cloud — 4 agentes de IA que trabalham 24/7</title>
+  <meta name="description" content="Gere conteúdo de marketing, revise contratos, responda clientes e triе currículos com IA. Pague só pelo que usar." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#top">⚡ Agent API Cloud</a>
+      <nav>
+        <a href="#produtos">Produtos</a>
+        <a href="#precos">Preços</a>
+        <a href="#como">Como funciona</a>
+        <a class="btn btn-ghost" href="#comecar">Entrar</a>
+      </nav>
+    </div>
+  </header>
+
+  <section id="top" class="hero">
+    <div class="container">
+      <p class="eyebrow">4 funcionários de IA · 1 API · pague por uso</p>
+      <h1>Quatro agentes de IA que trabalham <span class="grad">24 horas por dia</span> — por centavos.</h1>
+      <p class="sub">Gere conteúdo de marketing, revise contratos, responda clientes e triе currículos automaticamente. Sem mensalidade escondida, sem contratar equipe.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#comecar">Começar grátis</a>
+        <a class="btn btn-ghost" href="#produtos">Ver os agentes</a>
+      </div>
+      <p class="micro">25 créditos grátis ao se cadastrar · sem cartão de crédito</p>
+    </div>
+  </section>
+
+  <section id="produtos" class="section">
+    <div class="container">
+      <h2>Os agentes</h2>
+      <div class="grid grid-4">
+        <article class="card">
+          <div class="ico">✍️</div>
+          <h3>Marketing</h3>
+          <p>Blog, posts para Instagram/LinkedIn/X, títulos de SEO e hashtags — a partir de um briefing, em segundos.</p>
+        </article>
+        <article class="card">
+          <div class="ico">⚖️</div>
+          <h3>Jurídico</h3>
+          <p>Extrai cláusulas, aponta riscos com severidade e lista o que falta no contrato. <em>Não é aconselhamento jurídico.</em></p>
+        </article>
+        <article class="card">
+          <div class="ico">💬</div>
+          <h3>Suporte 24/7</h3>
+          <p>Chatbot que responde com base na sua documentação, cita a fonte e escala para um humano quando não tem certeza.</p>
+        </article>
+        <article class="card">
+          <div class="ico">📄</div>
+          <h3>RH / Triagem</h3>
+          <p>Ranqueia candidatos pela vaga: nota, skills, lacunas e justificativa — com checagem de viés embutida.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="precos" class="section section-alt">
+    <div class="container">
+      <h2>Preços simples, pré-pagos</h2>
+      <p class="section-sub">Compre créditos e gaste como quiser entre os 4 agentes. Suporte 1 crédito/msg · RH 3/currículo · Marketing 5/geração · Jurídico 8/documento.</p>
+      <div class="grid grid-3">
+        <article class="price">
+          <h3>Starter</h3>
+          <div class="amount">US$ 19</div>
+          <p class="credits">1.000 créditos</p>
+          <ul>
+            <li>Ideal para testar de verdade</li>
+            <li>Todos os 4 agentes</li>
+            <li>Acesso via API e painel</li>
+          </ul>
+          <button class="btn btn-primary buy" data-pack="starter">Comprar</button>
+        </article>
+        <article class="price price-featured">
+          <div class="tag">Mais popular</div>
+          <h3>Pro</h3>
+          <div class="amount">US$ 79</div>
+          <p class="credits">5.000 créditos</p>
+          <ul>
+            <li>Melhor custo por crédito</li>
+            <li>Todos os 4 agentes</li>
+            <li>Histórico de uso completo</li>
+          </ul>
+          <button class="btn btn-primary buy" data-pack="pro">Comprar</button>
+        </article>
+        <article class="price">
+          <h3>Business</h3>
+          <div class="amount">US$ 299</div>
+          <p class="credits">25.000 créditos</p>
+          <ul>
+            <li>Para volume e times</li>
+            <li>Todos os 4 agentes</li>
+            <li>Prioridade de uso</li>
+          </ul>
+          <button class="btn btn-primary buy" data-pack="business">Comprar</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="como" class="section">
+    <div class="container">
+      <h2>Como funciona</h2>
+      <div class="grid grid-3">
+        <div class="step"><span class="num">1</span><h3>Cadastre-se</h3><p>Ganhe 25 créditos grátis e receba sua chave de API.</p></div>
+        <div class="step"><span class="num">2</span><h3>Escolha o agente</h3><p>Chame pela API ou pelo painel. Resultado em segundos.</p></div>
+        <div class="step"><span class="num">3</span><h3>Pague por uso</h3><p>Compre créditos quando precisar. Sem contrato.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="comecar" class="section section-alt">
+    <div class="container narrow">
+      <h2>Começar grátis</h2>
+      <p class="section-sub">Crie sua conta e receba a chave de API na hora.</p>
+      <form id="signup-form" class="signup">
+        <input type="email" id="email" placeholder="seu@email.com" required />
+        <button class="btn btn-primary" type="submit">Criar conta grátis</button>
+      </form>
+      <div id="result" class="result" hidden></div>
+      <p id="backend-warn" class="warn" hidden>⚠️ O backend ainda não foi configurado. Publique o servidor (veja <code>DEPLOY.md</code>) e defina a URL em <code>docs/config.js</code>.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>⚡ Agent API Cloud — feito com agentes de IA. Vitrine hospedada no GitHub Pages; backend em servidor próprio.</p>
+    </div>
+  </footer>
+
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
